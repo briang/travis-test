@@ -15,6 +15,9 @@ version 1
 =for html
 <img src="https://travis-ci.org/briang/travis-test.svg?branch=master" alt="TravisCI Status"/>
 
+=for html
+<img src="https://ci.appveyor.com/api/projects/status/github/briang/tracis-test?branch=master&svg=true" alt="AppVeyor Status"/>
+
 =cut
 
 our $VERSION = '1.0';
