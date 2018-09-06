@@ -1,8 +1,4 @@
 language: "perl"
-before_install:
-  - cpanm --notest Devel::Cover::Report::Coveralls
-after_success:
-  - cover -test -report coveralls
 perl:
   - "5.8"
   # - "5.10"
@@ -20,5 +16,7 @@ perl:
   # - "5.26"
   # - "5.26-shrplib"
   # - "5.28"
-
-  # - "5.28"
+before_install:
+  - cpanm --notest Devel::Cover::Report::Coveralls
+after_success:
+  - cover -test -report coveralls
