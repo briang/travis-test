@@ -1,0 +1,32 @@
+=for html
+<img src="https://travis-ci.org/briang/travis-test.svg?branch=master" alt="TravisCI Status"/>
+<img src="https://ci.appveyor.com/api/projects/status/github/briang/travis-test?branch=master&svg=true" alt="AppVeyor Status"/>
+
+=head1 Bit::Twiddling
+
+version 0.10
+
+=head2 INSTALLATION
+
+To install this module, run the following commands:
+
+    perl Makefile.PL
+    make
+    make test
+    make install
+
+Or, just use your favorite CPAN client
+
+    cpanm Bit::Twiddling
+
+=head2 DEPENDENCIES
+
+This module requires a C compiler, but has no other build
+dependencies. For testing, Test::Warn is required.
+
+=head2 COPYRIGHT AND LICENCE
+
+Copyright (C) 2018, Brian Greenfield
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
