@@ -1,15 +1,6 @@
 #!/usr/bin/env perl
 
 use strict;  use warnings;
-
-BEGIN {
-    if ($ENV{EMACS}) {
-        chdir '..' until -d 't';
-        use lib 'lib';
-    }
-}
-
-################################################################################
 use Test::More qw(no_plan);
 
 use Travis::Test;
