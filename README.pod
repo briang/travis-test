@@ -2,7 +2,7 @@
 <img src="https://travis-ci.org/briang/travis-test.svg?branch=master" alt="TravisCI Status"/>
 <img src="https://ci.appveyor.com/api/projects/status/github/briang/travis-test?branch=master&svg=true" alt="AppVeyor Status"/>
 
-=head1 Bit::Twiddling
+=head1 Travis::Test
 
 version 0.10
 
@@ -17,7 +17,7 @@ To install this module, run the following commands:
 
 Or, just use your favorite CPAN client
 
-    cpanm Bit::Twiddling
+    cpanm Travis::Test
 
 =head2 DEPENDENCIES
 
