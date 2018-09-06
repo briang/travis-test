@@ -12,6 +12,9 @@ Travis::Test - A Test. For Travis. Duh.
 
 version 1
 
+=for html
+<img src="https://travis-ci.org/briang/travis-test.svg?branch=master" alt="TravisCI Status"/>
+
 =cut
 
 our $VERSION = '1.0';
