@@ -21,6 +21,13 @@ my %opt = (
 );
 lock_hash %opt;
 
+=head2 git
+
+    @git_output_lines  = git($command, @options) # 1
+    $git_output_string = git($command, @options) # 2
+
+=cut
+
 sub git {
     my @cmd = ( 'git', @_ );
     say "@cmd" if $opt{verbose};
@@ -29,6 +36,12 @@ sub git {
     return wantarray ? split(/\n/, $stdout) : $stdout;
 }
 
+=head2 get_tags
+
+    @list_of_tags = get_tags()
+
+=cut
+
 sub get_tags() {
     my @tags = git( 'tag', q[--format=%(objectname)~%(creatordate:iso)~%(refname:strip=2)] );
     return sort { -($a->{date} cmp $b->{date}) }
@@ -36,6 +49,12 @@ sub get_tags() {
                   { sha => $f[0], date => $f[1], text => $f[2] }
            } @tags;
 }
+
+=head2 get_commits
+
+    @list_of_commit_hashes = get_commits()
+
+=cut
 
 sub get_commits_XXXX() {
     my $s = git( 'rev-list', q[--header], $opt{branch} );
@@ -48,8 +67,15 @@ sub get_commits_XXXX() {
     } split /\0/, $s;
 }
 
-sub is_dirty { grep { ! /^##/ } git('status', '--porcelain') }
+=head2 is_dirty
 
+      @list_of_dirty_files = is_dirty() # 1
+      $repo_is_dirty       = is_dirty() # 2
+
+=cut
+
+sub is_dirty { grep { ! /^##/ } git('status', '--porcelain') }
+################################################################################
 die qq[Working tree is not clean (see git status for details)\n]
   if is_dirty();
 
