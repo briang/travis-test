@@ -1,13 +1,12 @@
-#!/usr/bin/env perl
+#!/opt/perlbrew/perls/dev/bin/perl
+
+use 5.008;
 
 #:TAGS:
 
-use 5.022;
-
 use strict;  use warnings;
-use experimental qw(signatures);
 
-use Data::Dump;
+use Data::Dump; # XXX
 ################################################################################
 use Capture::Tiny 'capture';
 use Hash::Util 'lock_hash'; # XXX
@@ -30,7 +29,7 @@ lock_hash %opt;
 
 sub git {
     my @cmd = ( 'git', @_ );
-    say "@cmd" if $opt{verbose};
+    print "@cmd\n" if $opt{verbose};
     my ($stdout, $stderr, $exit) = capture { system @cmd };
     die $stderr if $exit;
     return wantarray ? split(/\n/, $stdout) : $stdout;
@@ -42,7 +41,7 @@ sub git {
 
 =cut
 
-sub get_tags() {
+sub get_tags {
     my @tags = git( 'tag', q[--format=%(objectname)~%(creatordate:iso)~%(refname:strip=2)] );
     return sort { -($a->{date} cmp $b->{date}) }
            map  { my @f = split /~/, $_, 3;
@@ -56,7 +55,7 @@ sub get_tags() {
 
 =cut
 
-sub get_commits_XXXX() {
+sub get_commits_XXXX {
     my $s = git( 'rev-list', q[--header], $opt{branch} );
 
     map {
