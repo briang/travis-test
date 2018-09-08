@@ -9,6 +9,7 @@ use strict;  use warnings;
 use Data::Dump; # XXX
 ################################################################################
 use Capture::Tiny 'capture';
+use CPAN::Changes;
 use Hash::Util 'lock_hash'; # XXX
 use Time::Piece;
 
@@ -75,28 +76,37 @@ sub get_commits_XXXX {
 
 sub is_dirty { grep { ! /^##/ } git('status', '--porcelain') }
 ################################################################################
-die qq[Working tree is not clean (see git status for details)\n]
-  if is_dirty();
+# die qq[Working tree is not clean (see git status for details)\n]
+#   if is_dirty(); # XXX
 
-my $previous_tag    = (get_tags())[0]->{text};
-my $next_tag        = $previous_tag + $opt{version_bump};
-my $date            = localtime->ymd();
-my @commit_messages = git('log', 'master', '--oneline', "$previous_tag..");
+my $last_version_from_git = (get_tags)[0]->{text};
+my $new_version           = $last_version_from_git + $opt{version_bump};
+my $date                  = localtime->ymd();
+my @commit_messages       = map {
+    s/^\S*\s+//; $_
+} git('log', 'master', '--oneline', "$last_version_from_git..");
 
-my $changes = "$next_tag    $date\n" . join "\n", map {
-      s/.*?\s/        - /;
-      $_
-  } @commit_messages;
+my $changes = CPAN::Changes->load( $opt{changes_file} );
+my $last_version_from_changes = ($changes->releases)[-1]->version;
+die << "EOM" unless $last_version_from_git == $last_version_from_changes;
+Version mismatch:
+    Changes: $last_version_from_changes
+        Git: $last_version_from_git
+EOM
+
+my $release = CPAN::Changes::Release->new(
+    version => $new_version,
+    date => $date,
+    changes => { "" => \@commit_messages },
+);
+
+$changes->add_release( $release );
 
 my $changes_old = "$opt{changes_file}.bak";
 rename $opt{changes_file}, $changes_old
   or die qq[cannot rename '$opt{changes_file}': $!\n];
 
-open my $IN,  "<", $changes_old
-  or die qq[cannot open '$changes_old': $!\n];
 open my $OUT, ">", $opt{changes_file}
   or die qq[cannot open '$opt{changes_file}': $!\n];
 
-print $OUT scalar readline $IN;
-print $OUT "\n$changes\n";
-print $OUT readline $IN;
+print $OUT $changes->serialize;
