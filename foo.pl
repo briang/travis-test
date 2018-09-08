@@ -48,6 +48,11 @@ sub get_commits_XXXX() {
     } split /\0/, $s;
 }
 
+sub is_dirty { grep { ! /^##/ } git('status', '--porcelain') }
+
+die qq[Working tree is not clean (see git status for details)\n]
+  if is_dirty();
+
 my $previous_tag    = (get_tags())[0]->{text};
 my $next_tag        = $previous_tag + $opt{version_bump};
 my $date            = localtime->ymd();
