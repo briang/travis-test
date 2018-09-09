@@ -10,16 +10,24 @@ use Data::Dump; # XXX
 ################################################################################
 use Capture::Tiny 'capture';
 use CPAN::Changes;
-use Hash::Util 'lock_hash'; # XXX
+use Getopt::Long::Descriptive;
 use Time::Piece;
 
-my %opt = (
-    branch       => 'master',
-    changes_file => 'Changes',
-    verbose      => 0,
-    version_bump => 0.01,
+my ($opt, $usage) = describe_options(
+    'foo.pl %o <some-arg>',
+    [ 'branch|B=s',  'the branch to use', { default => 'master' } ],
+    [ 'bump|b=s',    'the version bump between versions', { default => '0.01' }, ],
+    [ 'changes|c=s', 'the name of the file containing the changelog', { default  => 'Changes' } ],
+    [ 'dry-run|d',   'show what would happen, without making changes' ],
+    [ 'edit|e=s',    'launch editor after updating changelog', { default => $ENV{VISUAL} || $ENV{EDITOR} } ],
+    [ 'info|i',      'information about the repo and changelog' ],
+    [ 'verbose|v',   'print extra stuff' ],
+    [],
+    [ 'help',      'print usage message and exit', { shortcircuit => 1 } ],
+    { show_defaults => 1 }
 );
-lock_hash %opt;
+
+print($usage->text), exit if $opt->help;
 
 =head2 git
 
@@ -30,7 +38,7 @@ lock_hash %opt;
 
 sub git {
     my @cmd = ( 'git', @_ );
-    print "@cmd\n" if $opt{verbose};
+    print "@cmd\n" if $opt->verbose;
     my ($stdout, $stderr, $exit) = capture { system @cmd };
     die $stderr if $exit;
     return wantarray ? split(/\n/, $stdout) : $stdout;
@@ -57,7 +65,7 @@ sub get_tags {
 =cut
 
 sub get_commits_XXXX {
-    my $s = git( 'rev-list', q[--header], $opt{branch} );
+    my $s = git( 'rev-list', q[--header], $opt->branch );
 
     map {
         my ($meta, $message) = split /\n\n/, $_, 2;
@@ -80,13 +88,16 @@ sub is_dirty { grep { ! /^##/ } git('status', '--porcelain') }
 #   if is_dirty(); # XXX
 
 my $last_version_from_git = (get_tags)[0]->{text};
-my $new_version           = $last_version_from_git + $opt{version_bump};
+my $new_version           = $last_version_from_git + $opt->bump;
 my $date                  = localtime->ymd();
 my @commit_messages       = map {
     s/^\S*\s+//; $_
 } git('log', 'master', '--oneline', "$last_version_from_git..");
 
-my $changes = CPAN::Changes->load( $opt{changes_file} );
+die qq[No commits since last tagged version\n]
+  unless @commit_messages;
+
+my $changes = CPAN::Changes->load( $opt->changes_file );
 my $last_version_from_changes = ($changes->releases)[-1]->version;
 die << "EOM" unless $last_version_from_git == $last_version_from_changes;
 Version mismatch:
@@ -102,11 +113,11 @@ my $release = CPAN::Changes::Release->new(
 
 $changes->add_release( $release );
 
-my $changes_old = "$opt{changes_file}.bak";
-rename $opt{changes_file}, $changes_old
-  or die qq[cannot rename '$opt{changes_file}': $!\n];
+my $changes_old = $opt->changes_file . ".bak";
+rename $opt->changes_file, $changes_old
+  or die qq[cannot rename '$opt->changes_file': $!\n];
 
-open my $OUT, ">", $opt{changes_file}
-  or die qq[cannot open '$opt{changes_file}': $!\n];
+open my $OUT, ">", $opt->changes_file
+  or die qq[cannot open '$opt->changes_file': $!\n];
 
 print $OUT $changes->serialize;
