@@ -120,5 +120,5 @@ rename $opt->changes, $changes_old
 
 open my $OUT, ">", $opt->changes
   or die qq[cannot open '$opt->changes': $!\n];
-
 print $OUT $changes->serialize;
+close $OUT;
