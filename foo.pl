@@ -22,6 +22,7 @@ my ($opt, $usage) = describe_options(
     [ 'edit|e=s',    'launch editor after updating changelog', { default => $ENV{VISUAL} || $ENV{EDITOR} } ],
 #   [ 'force',       'force update even if errors' ],
     [ 'info|i',      'information about the repo and changelog' ],
+    [ 'suffix|s=s',  'suffix to use for backup file', { default => '.bak' } ],
     [ 'verbose|v',   'print extra stuff' ],
     [],
     [ 'help',      'print usage message and exit', { shortcircuit => 1 } ],
@@ -114,7 +115,7 @@ my $release = CPAN::Changes::Release->new(
 
 $changes->add_release( $release );
 
-my $changes_old = $opt->changes . ".bak";
+my $changes_old = $opt->changes . $opt->suffix;
 rename $opt->changes, $changes_old
   or die qq[cannot rename '$opt->changes': $!\n];
 
