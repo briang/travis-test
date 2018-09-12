@@ -16,7 +16,7 @@ use Time::Piece;
 my ($opt, $usage) = describe_options(
     'foo.pl %o <some-arg>',
     [ 'branch|B=s',  'the branch to use', { default => 'master' } ],
-    [ 'bump|b=s',    'the version bump between versions', { default => '0.01' }, ],
+    [ 'bump|b=s',    'the version bump between versions', { default => '0.001' }, ],
     [ 'changes|c=s', 'the name of the file containing the changelog', { default  => 'Changes' } ],
     [ 'dry-run|d',   'show what would happen, without making changes' ],
     [ 'edit|e=s',    'launch editor after updating changelog', { default => $ENV{VISUAL} || $ENV{EDITOR} } ],
