@@ -115,6 +115,11 @@ my $release = CPAN::Changes::Release->new(
 
 $changes->add_release( $release );
 
+if ($opt->dry_run) {
+    print STDOUT $changes->serialize;
+    exit;
+}
+
 my $changes_old = $opt->changes . $opt->suffix;
 rename $opt->changes, $changes_old
   or die qq[cannot rename '$opt->changes': $!\n];
