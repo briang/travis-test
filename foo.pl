@@ -26,6 +26,7 @@ my ($opt, $usage) = describe_options(
     [ 'verbose|v',   'print extra stuff' ],
     [],
     [ 'help',      'print usage message and exit', { shortcircuit => 1 } ],
+
     { show_defaults => 1 }
 );
 
