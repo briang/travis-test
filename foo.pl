@@ -61,23 +61,6 @@ sub get_tags {
            } @tags;
 }
 
-=head2 get_commits
-
-    @list_of_commit_hashes = get_commits()
-
-=cut
-
-sub get_commits_XXXX {
-    my $s = git( 'rev-list', q[--header], $opt->branch );
-
-    map {
-        my ($meta, $message) = split /\n\n/, $_, 2;
-        my ($sha)            = $meta    =~ /(.*)/;
-        my ($title)          = $message =~ /\s*(.*)/;
-        { sha => $sha, title => $title }
-    } split /\0/, $s;
-}
-
 =head2 is_dirty
 
       @list_of_dirty_files = is_dirty() # 1
