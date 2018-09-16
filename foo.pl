@@ -23,7 +23,7 @@ my ($opt, $usage) = describe_options(
     [ 'dry-run|d',   'show what would happen, without making changes' ],
     [ 'edit|e=s',    'launch editor after updating changelog', { default => $ENV{VISUAL} || $ENV{EDITOR} } ],
 #   [ 'force',       'force update even if errors' ],
-    [ 'info|i',      'information about the repo and changelog' ],
+#   [ 'info|i',      'information about the repo and changelog' ],
     [ 'suffix|s=s',  'suffix to use for backup file', { default => '.bak' } ],
     [ 'verbose|v',   'print extra stuff' ],
     [],
