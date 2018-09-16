@@ -16,7 +16,7 @@ use Time::Piece;
 ( my $APP_NAME = $0 ) =~ s|.*/||;
 
 my ($opt, $usage) = describe_options(
-    "$APP_NAME %o <some-arg>",
+    "$APP_NAME %o",
     [ 'branch|B=s',  'the branch to use', { default => 'master' } ],
     [ 'bump|b=s',    'the version bump between versions', { default => '0.001' }, ],
     [ 'changes|c=s', 'the name of the file containing the changelog', { default  => 'Changes' } ],
