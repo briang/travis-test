@@ -28,11 +28,20 @@ my ($opt, $usage) = describe_options(
     [ 'verbose|v',   'print extra stuff' ],
     [],
     [ 'help',      'print usage message and exit', { shortcircuit => 1 } ],
+    [ 'man',       'print manual and exit', { shortcircuit => 1 } ],
 
     { show_defaults => 1 }
 );
 
-print($usage->text), exit if $opt->help;
+print(<<"EOT") if $opt->man;
+$APP_NAME updates a Perl Changes file by extracting the latest commit
+messages from git. Consequently, it expects to be run from within a
+Git repository, and in the same directory as Changes.
+
+Usage:
+
+EOT
+print($usage->text), exit if $opt->man || $opt->help;
 
 =head2 git
 
