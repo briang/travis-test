@@ -94,7 +94,14 @@ my @commit_messages       = map {
 print qq[No commits since last tagged version\n] and exit
   unless @commit_messages;
 
+die "Cannot find '@{[$opt->changes]}' in current folder\n"
+  unless -f $opt->changes;
+
 my $changes = CPAN::Changes->load( $opt->changes );
+
+die "'@{[$opt->changes]}' has no entries\n"
+  unless $changes->releases;
+
 my $last_version_from_changes = ($changes->releases)[-1]->version;
 die << "EOM" unless $last_version_from_git == $last_version_from_changes;
 Version mismatch:
