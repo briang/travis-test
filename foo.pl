@@ -91,7 +91,7 @@ my @commit_messages       = map {
     s/^\S*\s+//; $_
 } git('log', 'master', '--oneline', "$last_version_from_git..");
 
-print qq[No commits since last tagged version\n] and exit
+die "No commits since last tagged version\n"
   unless @commit_messages;
 
 die "Cannot find '@{[$opt->changes]}' in current folder\n"
