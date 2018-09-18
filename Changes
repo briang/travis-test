@@ -1,5 +1,11 @@
 Revision history for Travis::Test
 
+0.031 2018-09-18
+ - check that Changes exists and is not empty
+ - implement --man
+ - implement --dry_run
+ - allow configurable suffix on backup file
+
 0.03 2018-09-08
  - tidy up foo.pl
  - add some documentation
