@@ -99,10 +99,11 @@ die "Cannot find '@{[$opt->changes]}' in current folder\n"
 
 my $changes = CPAN::Changes->load( $opt->changes );
 
+my @releases = $changes->releases;
 die "'@{[$opt->changes]}' has no entries\n"
-  unless $changes->releases;
+  unless @releases;
 
-my $last_version_from_changes = ($changes->releases)[-1]->version;
+my $last_version_from_changes = $releases[-1]->version;
 die << "EOM" unless $last_version_from_git == $last_version_from_changes;
 Version mismatch:
     Changes: $last_version_from_changes
