@@ -10,10 +10,11 @@ use Data::Dump; # XXX
 ################################################################################
 use Capture::Tiny 'capture';
 use CPAN::Changes;
+use File::Basename ();
 use Getopt::Long::Descriptive;
 use Time::Piece;
 
-( my $APP_NAME = $0 ) =~ s|.*/||;
+my $APP_NAME = File::Basename::basename($0);
 
 my ($opt, $usage) = describe_options(
     "$APP_NAME %o",
